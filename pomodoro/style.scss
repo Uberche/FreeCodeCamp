@@ -1,17 +1,21 @@
-$arrowcolor : #3E40A3;
-$arrowcolorh: #BA2F3C;
-$arrowcolora: #1A7D3B;
+$activeGreen: #00ab0c;
+$deactiveGreen: #003204;
 
 body {
   font-family: 'Vollkorn SC', serif;
+  background-image: url("http://www.freggie.ca/images/pomo.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
-#title {
-  text-align: center;
+#container {
+  width: 80%;
+  margin-left: auto;
+  margin-right:auto;
 }
 
 #controlrow {
-  margin-top: 40px;
+  margin-top: 26vh;
   display:flex;
   justify-content: space-around;
 }
@@ -24,17 +28,7 @@ body {
    -webkit-align-items: center;
    align-items: center;
    -webkit-justify-content: center;
-}
-
-i {
-  color: $arrowcolor;
-  font-size: 1.8em;
-  &:hover {
-    color: $arrowcolorh;
-    }
-  &:active {
-    color: $arrowcolora;
-    }
+  flex-grow: 1;
 }
 
 .time {
@@ -43,6 +37,8 @@ i {
   border: 1px solid black;
   border-radius: 20px;
   padding: 5px 10px;
+  color: $activeGreen;
+  font-family: 'Orbitron', sans-serif;
 }
 
 #startbtn {
@@ -52,18 +48,54 @@ i {
 
 #timeinfo {
   text-align: center;
+  width: 20%;
+  margin-top: 29vh;
+  flex-grow: 2;
 }
+
 #clockbox {
-  background-color: black;
-  width: 40%;
-  height: 150px;
+  width: 30%;
+  border-radius: 50px;
+  height: 130px;
   margin-right: auto;
   margin-left: auto;
   margin-top: 40px;
   font-family: 'Orbitron', sans-serif;
-  color: white;
+  color: $activeGreen;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  font-size: 6em;
+  
+  #timetext {
+  font-size: 3em;
+  }
+}
+
+#buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#hourglass {
+  text-align:center;
+  color: $activeGreen;
+}
+
+#breaklength {
+}
+
+#sessionlength {
+}
+
+.sessiontype {
+  width: 50%;
+  font-size: 0.8em;
+  padding-top: 5px;
+}
+
+#breaktype{
+  color: $deactiveGreen;
 }
