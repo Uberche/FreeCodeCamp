@@ -1,11 +1,5 @@
 <body>
-  <div class="container">
-    <h1 id="title">
-      Pom-O-Doro
-    </h1>
-    <div class="hidden" id="readsetgo">
-      Ready
-    </div>
+  <div id="container">
     <div id="controlrow">
       <div class="lengthbox" id="breaklength">
         <div id="breakuparrow">
@@ -18,10 +12,21 @@
           <i class="fa fa-3x fa-arrow-circle-down" aria-hidden="true"></i>
         </div>
       </div>
-      <div>
-        <button id="startbtn">Start</button>
-        <button id="stopbtn">Stop</button>
-        <button id="resetbtn">Reset</button>
+      <div id="timeinfo">
+        <div id="clockbox">
+          <div class="sessiontype" id="sessiontype">Session</div>
+          <div class="sessiontype" id="breaktype">break</div>
+          <div id="timetext">
+            <span id="minutes">00</span>
+            <span id="colon">:</span>
+            <span id="seconds">00</span>
+          </div>
+        </div>
+        <div id="hourglass">
+          <div>Sessions Complete: <span id="sessioncomp">0</span></div>
+          <div id="filler">
+          </div>
+        </div>
       </div>
       <div class="lengthbox" id="sessionlength">
         <div id="sessionuparrow">
@@ -35,11 +40,10 @@
         </div>
       </div>
     </div>
-    <h2 id="timeinfo">Session</h2>
-    <div id="clockbox">
-      <div id="timetext">
-        5:00
-      </div>
+    <div id="buttons">
+      <button id="startbtn">Start</button>
+      <button id="stopbtn">Stop</button>
+      <button id="resetbtn">Reset</button>
     </div>
   </div>
 </body>
