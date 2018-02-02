@@ -3,19 +3,9 @@ $deactiveGreen: #003204;
 
 body {
   font-family: 'Vollkorn SC', serif;
-  background-image: url("http://www.freggie.ca/images/pomo.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-#container {
-  width: 80%;
-  margin-left: auto;
-  margin-right:auto;
 }
 
 #controlrow {
-  margin-top: 26vh;
   display:flex;
   justify-content: space-around;
 }
@@ -49,14 +39,11 @@ body {
 #timeinfo {
   text-align: center;
   width: 20%;
-  margin-top: 29vh;
   flex-grow: 2;
 }
 
 #clockbox {
   width: 30%;
-  border-radius: 50px;
-  height: 130px;
   margin-right: auto;
   margin-left: auto;
   margin-top: 40px;
@@ -98,4 +85,8 @@ body {
 
 #breaktype{
   color: $deactiveGreen;
+}
+
+#title {
+  text-align: center;
 }
