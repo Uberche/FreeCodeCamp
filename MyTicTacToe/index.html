@@ -3,7 +3,10 @@
   <div id="scores">
     <div class="scorebox" id="human">
       <span id="scorename">Human</span>
-      <div id="score">0</div>
+      <div id="score">
+        <div class="scorenum" id="win">0
+        </div>
+      </div>
     </div>
     <div class="scorebox">
       <button id="reset">Restart</button>
@@ -11,10 +14,24 @@
     </div>
     <div class="scorebox" id="computer">
       <span id="scorename">Computer</span>
-      <div id="score">0</div>
+      <div id="score">
+        <div class="scorenum" id="loss">0
+        </div>
+      </div>
     </div>
   </div>
-  <div class="printout" id="input">Hello, I am Computer.</div>
+  <div id="input">
+    <div class="printout" id="compspeak">Hello, I am Computer.
+    </div>
+    <div id="dropdown">
+      <div id="droptext">Difficulty</div>
+      <select id="dropdownmenu">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </div>
+  </div>
 </div>
 <table>
   <tr>
