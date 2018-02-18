@@ -143,6 +143,8 @@ function playerReset() {
   player.pos.y = 0;
   player.pos.x = (arena[0].length /2 | 0) - (player.matrix[0].length /2 | 0);
   if (collide(arena, player)) {
+    console.log("now");
+    document.getElementById('hboard').style.display = "block";
     arena.forEach(row => row.fill(0));
     player.score = 0;
     updateScore();
@@ -188,6 +190,22 @@ let dropInterval = 1000;
 let lastTime = 0;
 
 function update(time = 0) {
+  if (player.score >= 2500) {
+    dropInterval = 50;
+  } else if (player.score >= 2000) {
+    dropInterval = 100;
+  } else if (player.score >= 1500) {
+    dropInterval = 300;
+  } else if (player.score >= 1000) {
+    dropInterval = 600;
+  } else if (player.score >= 500) {
+    dropInterval = 800;
+  } else if (player.score >= 250) {
+    dropInterval = 900;
+  } else {
+    dropInterval = 1000;
+  }
+  document.getElementById('speed').innerText = dropInterval;
   const deltaTime = time - lastTime;
   lastTime = time;
   dropCounter += deltaTime;
@@ -198,8 +216,16 @@ function update(time = 0) {
   requestAnimationFrame(update);
 }
 
+
 function updateScore() {
+  let topScore = localStorage.getItem('highscore');
   document.getElementById('score').innerText = player.score;
+  if (player.score > topScore) {
+    localStorage.setItem('highscore', player.score);
+    topScore = player.score;
+    document.getElementById('topscore').innerText = topScore;
+    console.log(localStorage);
+  }
 }
 
 const colors = [
@@ -235,6 +261,7 @@ document.addEventListener ('keydown', event => {
   }
 })
 
+document.getElementById('topscore').innerText = localStorage.getItem('highscore');
 playerReset();
 updateScore();
 update();
