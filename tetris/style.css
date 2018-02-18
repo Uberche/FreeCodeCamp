@@ -1,0 +1,12 @@
+body {
+  background-color: grey;
+  text-align: center;
+}
+
+#tetris {
+  border: 2px solid white;
+}
+
+#hboard {
+  display: none;
+}
