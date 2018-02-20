@@ -6,7 +6,11 @@ context.scale(20,20);
 context.fillStyle= '#000';
 context.fillRect(0, 0, canvas.width, canvas.height);
 
+let isRunning;
+let reset;
+
 function arenaSweep(){
+  let oldScore = player.score;
   let rowCount = 1;
   outer: for(let y = arena.length -1; y > 0; y--) {
     for (let x = 0; x < arena[y].length; x++) {
@@ -23,7 +27,7 @@ function arenaSweep(){
   }  
 }
 
-function collide(area, player) {
+function collide(arena, player) {
   const[m, o] = [player.matrix, player.pos];
   for (let y=0; y<m.length; y++) {
     for (let x=0; x<m[y].length; x++) {
@@ -142,9 +146,13 @@ function playerReset() {
   player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
   player.pos.y = 0;
   player.pos.x = (arena[0].length /2 | 0) - (player.matrix[0].length /2 | 0);
-  if (collide(arena, player)) {
-    console.log("now");
-    document.getElementById('hboard').style.display = "block";
+  if (collide(arena, player) || reset == true) {
+    if (reset !== true) {
+      document.getElementById('hboard').style.display = "block"; 
+      document.getElementById('start').innerText = "Start Game";     
+    }
+    isRunning = false;
+    reset = false;
     arena.forEach(row => row.fill(0));
     player.score = 0;
     updateScore();
@@ -152,6 +160,8 @@ function playerReset() {
 }
 
 function playerRotate(dir) {
+  console.log(arena);
+  console.log(player);
   const pos = player.pos.x;
   let offset = 1;
   rotate(player.matrix, dir);
@@ -190,30 +200,32 @@ let dropInterval = 1000;
 let lastTime = 0;
 
 function update(time = 0) {
-  if (player.score >= 2500) {
-    dropInterval = 50;
-  } else if (player.score >= 2000) {
-    dropInterval = 100;
-  } else if (player.score >= 1500) {
-    dropInterval = 300;
-  } else if (player.score >= 1000) {
-    dropInterval = 600;
-  } else if (player.score >= 500) {
-    dropInterval = 800;
-  } else if (player.score >= 250) {
-    dropInterval = 900;
-  } else {
-    dropInterval = 1000;
+  if (isRunning) {
+    if (player.score >= 2500) {
+      dropInterval = 75;
+    } else if (player.score >= 2000) {
+      dropInterval = 100;
+    } else if (player.score >= 1500) {
+      dropInterval = 300;
+    } else if (player.score >= 1000) {
+      dropInterval = 600;
+    } else if (player.score >= 500) {
+      dropInterval = 800;
+    } else if (player.score >= 250) {
+      dropInterval = 900;
+    } else {
+      dropInterval = 1000;
+    }
+    document.getElementById('speed').innerText = dropInterval;
+    const deltaTime = time - lastTime;
+    lastTime = time;
+    dropCounter += deltaTime;
+    if(dropCounter > dropInterval) {
+      playerDrop();
+    }
+    draw();
+    requestAnimationFrame(update);
   }
-  document.getElementById('speed').innerText = dropInterval;
-  const deltaTime = time - lastTime;
-  lastTime = time;
-  dropCounter += deltaTime;
-  if(dropCounter > dropInterval) {
-    playerDrop();
-  }
-  draw();
-  requestAnimationFrame(update);
 }
 
 
@@ -261,7 +273,15 @@ document.addEventListener ('keydown', event => {
   }
 })
 
+document.getElementById('start').addEventListener('click', () => {
+  reset = true;
+  document.getElementById('start').innerText = "Reset Game";
+  playerReset();
+  isRunning = true;
+  update();
+});
+
+
 document.getElementById('topscore').innerText = localStorage.getItem('highscore');
 playerReset();
 updateScore();
-update();
