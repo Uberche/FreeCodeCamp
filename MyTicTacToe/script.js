@@ -70,10 +70,10 @@ function compChoice() {
   switch (level) {
       
     case "1":
-      miniMax(boardState, computer, 0);
+      return miniMax(boardState, computer, 0).index;
       break;
     case "2":
-      miniMax(boardState, computer, 0);
+      return miniMax(boardState, computer, 0).index;
       break;
     default: 
       return emptySq(boardState)[0];
@@ -81,40 +81,47 @@ function compChoice() {
 }
 
 function miniMax(board, player, depth) {
-  let openCells = emptySq(boardState); 
+  let openCells = emptySq(board);
+  // if (depth >= 3) {
+  //   return {hypScore: 0};
+  // }
   
-  if (checkWin(human,board)) {
-    return {hypScore: depth - 10};
-  } else if (checkWin(computer,board)) {
-    return {hypScore: 10 - depth};
-  } else if (checkTie(board)) {
+  if (checkWin(human, board)) {
+    return {hypScore: -10};
+    depth -= 1;
+  } else if (checkWin(computer, board)) {
+    return {hypScore: 10};
+    depth -= 1;
+  } else if (openCells.length === 0) {
     return {hypScore: 0};
+    depth -= 1;
   }
-  console.log(board + " | " + player + " | " + depth);
+  
   let moves = [];
   for (let i = 0; i < openCells.length; i++) {
     let thisMove = {};
     thisMove.index = board[openCells[i]];
     board[openCells[i]] = player;
-    console.log(openCells);
+    
     if (player == human) {
       let newScore = miniMax(board, computer, depth += 1);
       thisMove.hypScore = newScore.hypScore;
+      depth -= 1;
     } else {
       let newScore = miniMax(board, human, depth += 1);
       thisMove.hypScore = newScore.hypScore;
+      depth -= 1;
     }
   
     board[openCells[i]] = thisMove.index;
 
     moves.push(thisMove);
   }
-  
   let bestMove;
-  if (player = computer) {
+  if (player === computer) {
     let bestScore = -100;
     for (let i = 0; i < moves.length; i++) {
-      if (moves[i].hypScore > bestMove) {
+      if (moves[i].hypScore > bestScore) {
         bestScore = moves[i].hypScore;
         bestMove = i;
       }
@@ -122,12 +129,14 @@ function miniMax(board, player, depth) {
   } else {
     let bestScore = 100;
     for (let i = 0; i < moves.length; i++) {
-      if (moves[i].hypScore < bestMove) {
+      if (moves[i].hypScore < bestScore) {
         bestScore = moves[i].hypScore;
         bestMove = i;
       }
     }
   }
+  // console.log(moves);
+  // console.log(moves[bestMove]);
   return moves[bestMove];
 }
 
