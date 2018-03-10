@@ -1,5 +1,96 @@
-#myCanvas {
-  width: 800px;
-  height: 800px;
+#bg {
+  width: 100%;
+}  
+  
+#gameboard {
+  width: 600px;
+  height: 600px;
+  background-color: black;
+  border-radius: 46%;
+  display: inline-grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  justify-items: center;
+  align-items: center;
+}
+
+.buttons {
+  width: 240px;
+  height: 240px;
+}
+
+#upleft {
+  background-color: #0000ba;
+  border-top-left-radius: 100%;
+}
+
+#upright {
+  background-color: #ba0000;
+  border-top-right-radius: 100%;
+}
+
+#downleft {
+  background-color: #baba00;
+  border-bottom-left-radius: 100%;
+}
+
+#downright {
+  background-color: #00ba00;
+  border-bottom-right-radius: 100%;
+}
+
+#center {
+  position: absolute;
+  width: 250px;
+  height: 250px;
   background-color: white;
+  border-radius: 50%;
+  border: 30px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#monitor {
+  width: 100px;
+  height: 50px;
+  background: black;
+  margin-top: 20px;
+}
+
+#togglerow {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 80%;  
+}
+
+.togglecolumn {
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+}
+
+.toggle {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  box-shadow: 0px 0px 2px 2px black;
+}
+
+#strictt {
+  background-color: #094000;
+}
+
+#startt {
+  background-color: #400000;
+  border: 1px solid black;
+}
+
+#speaker {
+  width: 100px;
+  height: 50px;
+  background: black;
+  margin-bottom: 20px;
 }
