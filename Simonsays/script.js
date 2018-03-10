@@ -1,58 +1,101 @@
-let c = document.getElementById('myCanvas');
-c.width = 800;
-c.height = 800;
-let ctx = c.getContext('2d');
-let colors = {
-  red: {
-    x: 410,
-    y: 390,
-  },
-  green: {
-    x: 410,
-    y: 410,
-  }, 
-  yellow: {
-    x: 390,
-    y: 410,
-  },
-  blue: {
-    x: 390,
-    y: 390,
+let strict = false;
+let humanTurn = false;
+let pattern = [];
+
+function button(name,brightColor,darkColor){
+  this.id = name;
+  this.color = darkColor;
+  this.brightColor = brightColor;
+  this.highlight = function () {
+    let id = this.id;
+    let oldColor = this.color;
+    document.getElementById(id).style.backgroundColor = this.brightColor;
+    setTimeout(function() {
+      document.getElementById(id).style.backgroundColor = oldColor;      
+    }, 500);
   }
 }
 
-function drawBoard() {
-  ctx.clearRect(0, 0, c.width, c.height);
+let buttonArray = [
+  new button("upleft","#0000ff", "#0000ba"),
+  new button("upright","#ff0000", "#ba0000"),
+  new button("downleft","#ffff00", "#baba00"),
+  new button("downright","#00ff00", "#00ba00"),
+]
 
-  ctx.beginPath();
-  ctx.arc(c.width/2, c.height/2, 300, 0, 2*Math.PI, false);
-  ctx.fillStyle = "black";
-  ctx.fill();
-  
-  ctx.beginPath();
-  ctx.arc(colors.red.x, colors.red.y, 220, (-90*(Math.PI/180))+1*(Math.PI/180), (0*(Math.PI/180))-1*(Math.PI/180), false);
-  ctx.lineWidth = 100;
-  ctx.strokeStyle = "red";
-  ctx.stroke();
-  
-  ctx.beginPath();
-  ctx.arc(colors.green.x, colors.green.y, 220, 0*(Math.PI/180), 90*(Math.PI/180), false);
-  ctx.lineWidth = 100;
-  ctx.strokeStyle = "green";
-  ctx.stroke();
-  
-  ctx.beginPath();
-  ctx.arc(colors.yellow.x, colors.yellow.y, 220, 90*(Math.PI/180), 180*(Math.PI/180), false);
-  ctx.lineWidth = 100;
-  ctx.strokeStyle = "yellow";
-  ctx.stroke();
-  
-  ctx.beginPath();
-  ctx.arc(colors.blue.x, colors.blue.y, 220, 180*(Math.PI/180), 270*(Math.PI/180), false);
-  ctx.lineWidth = 100;
-  ctx.strokeStyle = "blue";
-  ctx.stroke();
-  
+let startButton = document.getElementById('startt');
+startButton.addEventListener('click', startGame);
+
+let strictButton = document.getElementById('strictt');
+strictButton.addEventListener('click', strictOn);
+
+function strictOn() {
+  let bgColor = strictButton.style.backgroundColor;
+  if (strict == false) {
+    Object.assign(strictButton.style, { backgroundColor: 'green' })
+    strict = true;
+  } else {
+    Object.assign(strictButton.style, { backgroundColor: '#094000' })
+    strict = false;
+  }
 }
 
-drawBoard();
+function startGame() {
+  this.style.backgroundColor = 'red';
+  this.style.boxShadow = '0px 0px 3px 3px #400000';
+  turn();
+}
+
+function turn() {
+  if(!humanTurn) {
+    extendPattern();
+    showPattern();
+  } else {
+    human();
+  }
+}
+
+function extendPattern() {
+  let newOne = Math.floor(Math.random()*4);
+  pattern.push([buttonArray[newOne].id,newOne]);
+  console.log(pattern);
+}
+
+function showPattern() {
+  let p=1;
+  pattern.forEach(function(x) {
+    window.setTimeout(function() {
+      let audio = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound' + (x[1]+1) + '.mp3');
+      audio.play();
+      buttonArray[x[1]].highlight();
+    }, 750*p);
+    p++;
+  });
+  humanTurn = true;
+  turn();
+}
+
+function human() {
+  let but = document.getElementsByClassName('buttons');
+  for(let i=0; i<but.length; i++) {
+    but[i].style.cursor = "pointer";
+    but[i].addEventListener('click', attempt);
+  }
+
+  function attempt(e) {
+    let humanPattern = [];
+    let nowId = e.target.id;
+    humanPattern.push(nowId);
+    for(let i=0; i<buttonArray.length; i++) {
+      if (buttonArray[i].id == nowId) {
+        let audio = new Audio('https://s3.amazonaws.com/freecodecamp/simonSound' + (i+1) + '.mp3');
+        audio.play();
+        buttonArray[i].highlight();
+      }
+    }
+    humanPattern.forEach((x,ind) => {
+      console.log(x);
+      console.log(ind);
+    });
+  }
+}
