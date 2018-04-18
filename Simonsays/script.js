@@ -1,7 +1,9 @@
-let strict = false;
-let humanTurn = false;
-var pattern = [];
-let numDisplay = 0;
+let useStrict = false;
+let pattern = [];
+let humanArray;
+let whoseTurn = "cpu";
+let buttons = document.querySelectorAll('.key');
+let gameOn;
 
 function button(id,name,brightColor,darkColor,audio){
   this.id = id;
@@ -12,7 +14,6 @@ function button(id,name,brightColor,darkColor,audio){
   this.highlight = function () {
     let id = this.id;
     let oldColor = this.color;
-    console.log(audio);
     this.audio.play();
     document.getElementById(name).style.backgroundColor = this.brightColor;
     setTimeout(function() {
@@ -22,85 +23,101 @@ function button(id,name,brightColor,darkColor,audio){
 }
 
 let buttonArray = [
-  new button(0,"upleft","#0000ff", "#0000ba",'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
-  new button(1,"upright","#ff0000", "#ba0000",'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
-  new button(2,"downleft","#ffff00", "#baba00",'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
-  new button(3,"downright","#00ff00", "#00ba00",'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3'),
+  new button(0,"key1","#0000ff", "#0000ba",'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3'),
+  new button(1,"key2","#ff0000", "#ba0000",'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3'),
+  new button(2,"key3","#ffff00", "#baba00",'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3'),
+  new button(3,"key4","#00ff00", "#00ba00",'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3'),
 ]
 
-let startButton = document.getElementById('startt');
-startButton.addEventListener('click', startGame);
-
-let strictButton = document.getElementById('strictt');
-strictButton.addEventListener('click', strictOn);
-
-function strictOn() {
-  let bgColor = strictButton.style.backgroundColor;
-  if (strict == false) {
-    Object.assign(strictButton.style, { backgroundColor: 'green' })
-    strict = true;
-  } else {
-    Object.assign(strictButton.style, { backgroundColor: '#094000' })
-    strict = false;
-  }
-}
-
-function startGame() {
-  humanTurn = false;
-  pattern = [];
-  this.style.backgroundColor = 'red';
-  this.style.boxShadow = '0px 0px 3px 3px #400000';
-  turn();
-}
-
-function turn() {
-  if(!humanTurn) {
-    extendPattern();
-    showPattern();
-  } else {
-    human();
-  }
-}
-
 function extendPattern() {
-  let newOne = Math.floor(Math.random()*4);
-  pattern.push([newOne,buttonArray[newOne].name]);
+  pattern.push(buttonArray[Math.floor(Math.random() * 4)]);
 }
 
 function showPattern() {
   let p=1;
   for(let i=0; i<pattern.length; i++) {
     window.setTimeout(function() {
-      console.log(buttonArray[pattern[i][0]]);
-      buttonArray[pattern[i][0]].highlight();
-    }, 750*p);
+      let tBut = buttonArray[pattern[i].id];
+      tBut.highlight();
+    }, 800*p);
     p++;
   }
-  humanTurn = true;
+}
+
+function addRemove(what) {
+  if (what == "remove") {
+    buttons.forEach((x) => {
+      x.style.cursor = "auto";
+      x.removeEventListener('click', clickButton);
+    });
+  } else {
+    buttons.forEach((x) => {
+      x.style.cursor = "pointer";
+      x.addEventListener('click', clickButton);
+    });
+  }
+}
+
+function turn() {
+  console.log(gameOn);
+  if (whoseTurn == "cpu" && gameOn == true) {
+    addRemove("remove");
+    extendPattern();
+    showPattern();
+    whoseTurn = "human";
+    turn();
+  } else if (whoseTurn = "human" && gameOn== true) {
+    humanArray = [];
+    humanTurn();
+  }
+}
+
+function humanTurn() {
+  addRemove("add");
+}
+
+function clickButton(e) {
+  for(let i=0; i<buttonArray.length; i++) {
+    if (buttonArray[i].name == e.target.id){
+      let tBut = buttonArray[i];
+      humanArray.push(tBut);
+      tBut.highlight();
+      for(let i=0;i<humanArray.length;i++) {
+        if (humanArray[i] != pattern[i]){
+          gameOver();
+        }
+      }
+      if (humanArray.length == pattern.length && gameOn == true) {
+        if(pattern.length >= 5) {
+          gameWin();
+        }
+        whoseTurn = "cpu";
+        document.getElementById('counter').innerText = pattern.length;
+        turn();
+      }
+      
+    }
+  }
+}
+
+function gameStart() {
+  
+  document.getElementById('start').innerText = "Restart";
+  gameOn = true;
+  pattern = [];
+  whoseTurn = "cpu"
   turn();
 }
 
-function human() {
-  let humanPattern = [];  
-  let but = document.getElementsByClassName('buttons');
-  for(let i=0; i<but.length; i++) {
-    but[i].style.cursor = "pointer";
-    but[i].addEventListener('click', attempt);
-  }
-
-  function attempt(e) {
-    let nowId = e.target.id;
-    humanPattern.push(nowId);
-    for(let i=0; i<buttonArray.length; i++) {
-      if (buttonArray[i].name == nowId) {
-        console.log(buttonArray[i]);
-        buttonArray[i].highlight();
-      }
-    }
-    
-    if (humanPattern.length == pattern.length) {
-      humanTurn = false;
-      turn();
-    }
-  }
+function gameWin() {
+  document.getElementById("output").innerText = "You Win!";
+  addRemove("remove");
+  gameOn = false;
 }
+
+function gameOver() {
+  document.getElementById("output").innerText = "You Lose!";
+  addRemove("remove");
+  gameOn = false;
+}
+document.getElementById('start').addEventListener('click', gameStart);
