@@ -1,9 +1,18 @@
+"use strict";
+
+const wrongAudio = new Audio('http://ethanstrauss.com/images/wrong.mp3');
+const buttons = document.querySelectorAll('.key');
 let useStrict = false;
 let pattern = [];
 let humanArray;
 let whoseTurn = "cpu";
-let buttons = document.querySelectorAll('.key');
 let gameOn;
+let click = 0;
+
+document.getElementById('strict').addEventListener('click', () => {
+  (useStrict == false) ? useStrict=true : useStrict=false;
+  $('#strictlight').toggleClass('greenlight');
+});
 
 function button(id,name,brightColor,darkColor,audio){
   this.id = id;
@@ -11,10 +20,16 @@ function button(id,name,brightColor,darkColor,audio){
   this.color = darkColor;
   this.brightColor = brightColor;
   this.audio = new Audio(audio);
-  this.highlight = function () {
+  this.highlight = function (good) {
     let id = this.id;
     let oldColor = this.color;
-    this.audio.play();
+    if (good) {
+      this.audio.play();  
+      console.log('good');    
+    } else {
+      wrongAudio.play(); 
+      console.log('bad');
+    }
     document.getElementById(name).style.backgroundColor = this.brightColor;
     setTimeout(function() {
       document.getElementById(name).style.backgroundColor = oldColor;      
@@ -38,7 +53,7 @@ function showPattern() {
   for(let i=0; i<pattern.length; i++) {
     window.setTimeout(function() {
       let tBut = buttonArray[pattern[i].id];
-      tBut.highlight();
+      tBut.highlight(true);
     }, 800*p);
     p++;
   }
@@ -59,7 +74,6 @@ function addRemove(what) {
 }
 
 function turn() {
-  console.log(gameOn);
   if (whoseTurn == "cpu" && gameOn == true) {
     addRemove("remove");
     extendPattern();
@@ -67,6 +81,7 @@ function turn() {
     whoseTurn = "human";
     turn();
   } else if (whoseTurn = "human" && gameOn== true) {
+    click = 0;
     humanArray = [];
     humanTurn();
   }
@@ -75,34 +90,44 @@ function turn() {
 function humanTurn() {
   addRemove("add");
 }
-
+// just check once. var X = 0++ everytime. is the latest the same as the corresponding? 
 function clickButton(e) {
+  click++;
   for(let i=0; i<buttonArray.length; i++) {
     if (buttonArray[i].name == e.target.id){
       let tBut = buttonArray[i];
-      humanArray.push(tBut);
-      tBut.highlight();
-      for(let i=0;i<humanArray.length;i++) {
-        if (humanArray[i] != pattern[i]){
+
+      // IS IT RIGHT
+      if (tBut == pattern[click-1]){
+        tBut.highlight(true);
+      } else {
+        tBut.highlight(false);
+        if (useStrict) {
           gameOver();
+        } else {
+          showPattern();
+          turn()          
         }
       }
-      if (humanArray.length == pattern.length && gameOn == true) {
+      
+      // Is It End
+      if (click == pattern.length && gameOn == true) {
         if(pattern.length >= 5) {
           gameWin();
         }
-        whoseTurn = "cpu";
+        console.log(pattern);
         document.getElementById('counter').innerText = pattern.length;
+        whoseTurn = "cpu";
         turn();
       }
-      
     }
   }
 }
 
 function gameStart() {
-  
-  document.getElementById('start').innerText = "Restart";
+  document.getElementById('counter').innerText = 0;
+  document.getElementById('starttext').innerText = "Restart";
+  document.getElementById('startlight').style.background = "#ff0000";
   gameOn = true;
   pattern = [];
   whoseTurn = "cpu"
@@ -111,12 +136,14 @@ function gameStart() {
 
 function gameWin() {
   document.getElementById("output").innerText = "You Win!";
+  document.getElementById('startlight').style.background = "#893b3b";
   addRemove("remove");
   gameOn = false;
 }
 
 function gameOver() {
   document.getElementById("output").innerText = "You Lose!";
+  document.getElementById('startlight').style.background = "#893b3b";
   addRemove("remove");
   gameOn = false;
 }
